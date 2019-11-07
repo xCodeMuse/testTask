@@ -9,12 +9,11 @@
 import React from 'react';
 
 import {HomeScreen} from './src/Screens/HomeScreen'
-
-
+import {NavComponent} from './src/MainNavigator'
 //MainApp
 const App = () => {
   return (
-     <HomeScreen/>
+     <NavComponent/>
   );
 };
 

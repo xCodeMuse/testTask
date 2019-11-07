@@ -5,33 +5,28 @@ import dataContext from '../Context/dataContext'
 import axios from 'axios'
 
 //API baseURL
-const baseURL = 'https://blockexplorer.com';
+
 
 const BodyComponent = (props) =>{
     const [Transdata,setData] = React.useState('')
-    const [unspentOutput,setunSpenOutput] = React.useState('')
-    const [flag,setFlag] = React.useState(false)
-
     React.useEffect(()=>{
-       if(Transdata.isValid && !flag){
-         checkunSpentOutput()
-         setFlag(true)
-       }
-      
-    },[Transdata,unspentOutput,flag])
+
+     
+    },[Transdata.unspentData])
 
     //render the list of bitcoin address transactions
    const renderTransactionList = () =>{
        if(Transdata.isValid){
-        return Transdata.data.transactions.map((li,index) =>{
+        return Transdata.data.map((li,index) =>{
+        
             return( <List.Item
               key={index+1}
               title={`Transaction ${index+1}`}
-              description={`${li}`}
+              description={`${li.txid}`}
               titleStyle={{color:'white'}}
               descriptionStyle={{color:'white'}}
               style={styles.listStyle}
-              left={props => <List.Icon {...props} icon="home-lock-open" />}
+              left={props => <List.Icon {...props} style={{backgroundColor:'white',borderRadius:10}} />}
                 />)
            }
        )
@@ -39,17 +34,19 @@ const BodyComponent = (props) =>{
     }
     
     //Api call to fetch unspentOutput
-    const checkunSpentOutput = () =>{
-        if(Transdata.isValid){
-            axios.get(`${baseURL}/api/addr/${Transdata.data.addrStr}/utxo`).then(
-                res =>{
-                    setunSpenOutput(res.data)
-                }
-            ).catch(err =>{
-                console.warn('No data found')
-            })
-        }
-      }
+    // const checkunSpentOutput = () =>{
+        
+    //     if(Transdata.isValid){
+    //         axios.get(`${baseURL}/v1/blockchain/address/${Transdata.address}/unspent`).then(
+    //             res =>{
+    //                 setunSpenOutput(res.data.unspent)
+    //                 setFlag(true)
+    //             }
+    //         ).catch(err =>{
+    //             console.warn('No data found')
+    //         })
+    //     }
+    //   }
 
       //unspendList items
       const Item = (item) => {
@@ -61,17 +58,17 @@ const BodyComponent = (props) =>{
           padding:20,
           borderRadius:10}}>
             <Text numberOfLines={6} style={{color:'white'}}>TransactionID: {item.title.item.txid}{'\n'}</Text>
-            <Text style={{color:'white',textAlign:'left'}}>Amount: {item.title.item.amount}</Text>
+            <Text style={{color:'white',textAlign:'left'}}>Amount: {item.title.item.value}</Text>
           </View>
         );
       }
       
       //horizontal flatList view for unspentData
       const renderUnspendData = () =>{
-          if(unspentOutput.length > 0){
+          if(Transdata.unspentData){
               return(
             <FlatList
-              data={unspentOutput}
+              data={Transdata.unspentData}
               renderItem={(item) => <Item title={item} />}
               keyExtractor={item => item.txid}
               horizontal={true}
@@ -84,7 +81,7 @@ const BodyComponent = (props) =>{
          <View style={styles.mainContainer}>
          {/* Context To Fetch datafrom Parent homescreen */}
          <dataContext.Consumer>
-             {(value) => setData(value)}
+             {(value) => {setData(value)}}
          </dataContext.Consumer> 
        
          <View style={{flex:0.3}}>{!Transdata.isValid && Transdata.err ? 
@@ -97,7 +94,7 @@ const BodyComponent = (props) =>{
            <Text style={[styles.headerTxt,{color: !Transdata.err ? 
             'transparent':'white',padding:2}]}>Unspent Outputs</Text>:
                <></>}
-          {flag && Transdata.isValid  ? renderUnspendData() : <></>}
+          {Transdata.isValid  ? renderUnspendData() : <></>}
 
           </View>
 
