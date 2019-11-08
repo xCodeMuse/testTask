@@ -38,12 +38,23 @@ const HomeScreen = (props) =>{
                              data:firstCall.data.address.transactions,
                            address:firstCall.data.
                          address.address})
-                        setRender(true)
+                        
                         
           
        }else if(!address){
-        setAddress(false)
-       } 
+        setRender(false)
+       }else if(address){
+        const firstCall =  await axios
+        .get(`${baseURL}/v1/blockchain/address/${address ? address : defaultAddress}/limit=40`)
+        
+        const unspentCall = await axios.get(`${baseURL}/v1/blockchain/address/${firstCall.data.address.address}/unspent`)
+
+        setFormData({...formData,unspentData:unspentCall.data.unspent,isValid:true,
+                             data:firstCall.data.address.transactions,
+                           address:firstCall.data.
+                         address.address})
+                         setRender(true)
+       }
     }
 
 

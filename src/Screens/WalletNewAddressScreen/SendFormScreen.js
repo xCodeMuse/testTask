@@ -39,9 +39,7 @@ const SendFormScreen = (props) =>{
         <View style={styles.mainContainer}>
             <View style={styles.CardContainer}>
             <View style={styles.formContainer}> 
-            <NavigationEvents
-                onWillBlur={() => console.warn("reRender")}
-                />
+           
             <StyledInput label={'Enter Receiver Address'} placeHolder={'Enter Bitcoin address'} 
                value={form.receiverAdd} setInput={(e) => setForm({...form,receiverAdd:e})} style={styles.TxtInput}/>
             <StyledInput label={'Enter Amount To Send'} placeHolder={'eg. 0.0003'} 
