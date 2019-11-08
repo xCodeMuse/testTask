@@ -8,7 +8,7 @@ import axios from 'axios'
 
 
 const BodyComponent = (props) =>{
-    const [Transdata,setData] = React.useState('')
+    const [Transdata,setData] = React.useState([])
     React.useEffect(()=>{
 
      
@@ -84,26 +84,26 @@ const BodyComponent = (props) =>{
              {(value) => {setData(value)}}
          </dataContext.Consumer> 
        
-         <View style={{flex:0.3}}>{!Transdata.isValid && Transdata.err ? 
+         <View style={{flex:0.3}}>
+         {!Transdata.isValid && Transdata.err ? 
             <Text style={styles.headerTxt}>Not Valid Address</Text>:
                <></>}
                </View> 
          {/* UnspendData Flatlist View */}
          <View style={{flex:2,alignItems:'center'}}>
-         {Transdata.isValid ? 
-           <Text style={[styles.headerTxt,{color: !Transdata.err ? 
-            'transparent':'white',padding:2}]}>Unspent Outputs</Text>:
-               <></>}
+         
+           <Text style={[styles.headerTxt,{color: Transdata.length > 0 ? 
+            'transparent':'white',padding:2}]}>Unspent Outputs</Text>
+              
           {Transdata.isValid  ? renderUnspendData() : <></>}
 
           </View>
 
          
           <View style={{flex:0.3}}>
-          {Transdata.isValid ? 
-           <Text style={[styles.headerTxt,{color: !Transdata.err ? 
-            'transparent':'white'}]}>TransactionList</Text>:
-                 <></>}
+          
+           <Text style={[styles.headerTxt,{color: Transdata.length > 0 ? 
+            'transparent':'white'}]}>TransactionList</Text>
             </View>
 
             {/* ListView to showcase the bitcoin address transactions */}
